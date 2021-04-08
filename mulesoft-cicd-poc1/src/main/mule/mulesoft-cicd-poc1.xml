@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0163576c-cd89-416d-a21a-5c99c3a30aaa" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mulesoft-cicd-poc1Flow" doc:id="b8eccd72-fa3e-42e8-82ef-25aec5b902ae" >
+		<http:listener doc:name="Listener" doc:id="d513a17e-907b-4edf-ab00-146f7686ed33" config-ref="HTTP_Listener_config" path="/test/{id}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e7487fcc-bf99-46dc-a5f3-b53e33974420" message=" #[correlationId]-flow started "/>
+		<ee:transform doc:name="Transform Message" doc:id="61029200-7caf-4791-bca0-8dae6d11045d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"employeeID" : attributes.uriParams.id
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
